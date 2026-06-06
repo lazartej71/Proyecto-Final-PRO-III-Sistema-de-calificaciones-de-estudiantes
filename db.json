@@ -1,0 +1,92 @@
+{
+  "estudiantes": [
+    {
+      "id": "1",
+      "nombre": "Jorge Exequiel",
+      "apellido": "Lazarte",
+      "dni": "44187339",
+      "anio": 2,
+      "turno": "tarde"
+    },
+    {
+      "id": "2",
+      "nombre": "Joshua Lautaro",
+      "apellido": "Orellana",
+      "dni": "40326789",
+      "anio": 2,
+      "turno": "tarde"
+    },
+    {
+      "id": "3",
+      "nombre": "Laura",
+      "apellido": "Rodríguez",
+      "dni": "42345678",
+      "anio": 1,
+      "turno": "noche"
+    }
+  ],
+  "materias": [
+    {
+      "id": "1",
+      "nombre": "Matemática",
+      "docente": "Prof. Ramírez",
+      "notaMinima": 6
+    },
+    {
+      "id": "2",
+      "nombre": "Programación Web",
+      "docente": "Prof. García",
+      "notaMinima": 6
+    },
+    {
+      "id": "3",
+      "nombre": "Base de Datos",
+      "docente": "Prof. López",
+      "notaMinima": 7
+    },
+    {
+      "id": "4",
+      "nombre": "Inglés",
+      "docente": "Prof. Smith",
+      "notaMinima": 6
+    }
+  ],
+  "calificaciones": [
+    {
+      "id": "1",
+      "estudianteId": 1,
+      "materiaId": 1,
+      "nota": 8,
+      "fecha": "2025-07-10"
+    },
+    {
+      "id": "2",
+      "estudianteId": 1,
+      "materiaId": 2,
+      "nota": 9,
+      "fecha": "2025-07-15"
+    },
+    {
+      "id": "3",
+      "estudianteId": 2,
+      "materiaId": 1,
+      "nota": 5,
+      "fecha": "2025-07-10"
+    },
+    {
+      "id": "4",
+      "estudianteId": 2,
+      "materiaId": 3,
+      "nota": 7,
+      "fecha": "2025-07-20"
+    },
+    {
+      "id": "5",
+      "estudianteId": 3,
+      "materiaId": 2,
+      "nota": 10,
+      "fecha": "2025-07-15"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
