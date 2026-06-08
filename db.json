@@ -45,10 +45,10 @@
       "notaMinima": 7
     },
     {
-      "id": "4",
-      "nombre": "Inglés",
-      "docente": "Prof. Smith",
-      "notaMinima": 6
+      "nombre": "Programacion 3",
+      "docente": "Ismael Chavez",
+      "notaMinima": 6,
+      "id": "3SnlR_YQ7Dw"
     }
   ],
   "calificaciones": [

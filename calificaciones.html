@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./JS/navegation.js" defer></script>
+    <script src="./JS/API/calificaciones.api.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="STYLE/style.css" rel="stylesheet">
-    <title>Bolentin+ - Estudiantes</title>
+    <title>Bolentin+ - Calificaciones</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -19,20 +21,70 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a  id="estudiantesNav"class="nav-link active" aria-current="page" href="#" onclick="mostrarEstudiantes()">Estudiantes</a>
+                        <a id="estudiantesNav" class="nav-link" href="index.html">Estudiantes</a>
                     </li>
                     <li class="nav-item">
-                        <a  id ="materiasNav"class="nav-link" href="#" onclick="mostrarMaterias()">Materias</a>
+                        <a id="materiasNav" class="nav-link" href="materias.html">Materias</a>
                     </li>
                     <li class="nav-item">
-                        <a  id= "calificacionesNav"class="nav-link" href="#" onclick="mostrarCalificaciones()">Calificaciones</a>
+                        <a id="calificacionesNav" class="nav-link active" aria-current="page" href="calificaciones.html">Calificaciones</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-   
+
+    <div class="container mt-4">
+      <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalCalificacion">
+        ➕ Ingresar Calificaciones
+      </button>
     </div>
+    <div class="container mt-4">
+      <div class="row" id="listadoCalificacion"></div>
+    </div>
+
+    <div class="modal fade" id="modalCalificacion" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">➕ Agregar Calificación</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="formularioCalificacion">
+              <input type="hidden" id="idCalificacionEditar" />
+              <div class="mb-3">
+                <label for="ListadoAlumno" class="form-label">Alumno</label>
+                <select class="form-select" id="ListadoAlumno" required>
+                  <option value="">Seleccioná un alumno...</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="ListadoMateria" class="form-label">Materia</label>
+                <select class="form-select" id="ListadoMateria" required>
+                  <option value="">Seleccioná una materia...</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="notaObtenida" class="form-label">Nota</label>
+                <input type="number" class="form-control" id="notaObtenida" inputmode="numeric" min="1" max="10" required />
+              </div>
+              <div class="mb-3">
+                <label for="fechaEvaluativo" class="form-label">Fecha de Evaluación</label>
+                <input type="date" class="form-control" id="fechaEvaluativo" required />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" id="btnGuardarCalificacion" class="btn btn-primary" form="formularioCalificacion">
+              Guardar Calificación
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <footer class="bg-dark text-white mt-5">
     <div class="container py-4">
         <div class="row">

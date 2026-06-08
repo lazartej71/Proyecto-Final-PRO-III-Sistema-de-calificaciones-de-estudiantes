@@ -1,13 +1,15 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./JS/navegation.js" defer></script>
+    <script src="./JS/API/materias.api.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="STYLE/style.css" rel="stylesheet">
-    <title>Bolentin+ - Estudiantes</title>
+    <title>Bolentin+ - Materias</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -19,10 +21,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a  id="estudiantesNav"class="nav-link active" aria-current="page" href="#" onclick="mostrarEstudiantes()">Estudiantes</a>
+                        <a  id="estudiantesNav"class="nav-link" href="#" onclick="mostrarEstudiantes()">Estudiantes</a>
                     </li>
                     <li class="nav-item">
-                        <a  id ="materiasNav"class="nav-link" href="#" onclick="mostrarMaterias()">Materias</a>
+                        <a  id ="materiasNav"class="nav-link active" aria-current="page" href="#" onclick="mostrarMaterias()">Materias</a>
                     </li>
                     <li class="nav-item">
                         <a  id= "calificacionesNav"class="nav-link" href="#" onclick="mostrarCalificaciones()">Calificaciones</a>
@@ -32,16 +34,14 @@
         </div>
     </nav>
     <div class="container mt-4">
-      <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalEstudiante">
+      <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalMaterias">
         ➕ Nueva Materia    
       </button>
     </div>
 
-    <div class="container mt-4">
-      <div class="row" id="listaEstudiantes"></div>
-    </div>
+   
 
-    <div class="modal fade" id="modalEstudiante" tabindex="-1">
+    <div class="modal fade" id="modalMaterias" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
@@ -49,18 +49,18 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
-            <form id="formularioEstudiante">
-              <input type="hidden" id="idEstudianteEditar" />
+            <form id="formularioMateria">
+              <input type="hidden" id="idMateriaEditar" />
               <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre de la Materia</label>
+                <label for="nombreMateria" class="form-label">Nombre de la Materia</label>
                 <input type="text" class="form-control" id="nombreMateria" required />
               </div>
               <div class="mb-3">
-                <label for="apellido" class="form-label">Docente a Cargo</label>
-                <input type="text" class="form-control" id="DocenteCargo" required />
+                <label for="docenteMateria" class="form-label">Docente a Cargo</label>
+                <input type="text" class="form-control" id="docenteMateria" required />
               </div>
               <div class="mb-3">
-                <label for="dni" class="form-label">Nota Mínima de Aprobación</label>
+                <label for="notaMinima" class="form-label">Nota Mínima de Aprobación</label>
                 <input type="number" class="form-control" id="notaMinima" min="1" max="10" step="1" required />
               </div>
 
@@ -68,12 +68,15 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" id="btnGuardarEstudiante" class="btn btn-primary" form="formularioEstudiante">
+            <button type="submit" id="btnGuardarMateria" class="btn btn-primary" form="formularioMateria">
               Guardar Materia
             </button>
           </div>
         </div>
       </div>
+    </div>
+    <div class="container mt-4">
+      <div class="row" id="listaMaterias"></div>
     </div>
     
     <footer class="bg-dark text-white mt-5">
