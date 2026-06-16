@@ -1,29 +1,593 @@
+/* ============================================================
+   Boletín+ — Sistema de diseño
+   Estética clara y editorial tipo dev-tool (Geist + Geist Mono).
+   Sin modo oscuro. Acentos sobrios, jerarquía por tipografía y
+   espacio en blanco, no por colores saturados.
+   ============================================================ */
+
+:root {
+  /* --- Superficies --- */
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f4f4f5;
+  --surface-3: #e9e9ec;
+
+  /* --- Bordes --- */
+  --border: #e6e6e9;
+  --border-strong: #d6d6da;
+
+  /* --- Texto --- */
+  --text: #18181b;
+  --text-muted: #6b7280;
+  --text-subtle: #9ca3af;
+
+  /* --- Acción primaria (negro casi puro, estilo Codex/Vercel) --- */
+  --accent: #18181b;
+  --accent-hover: #2a2a2e;
+  --ring: rgba(24, 24, 27, 0.12);
+
+  /* --- Marca (índigo, usada en nav, footer y detalles) --- */
+  --brand: #4f46e5;
+  --brand-strong: #4338ca;
+
+  /* Cromo de la app: nav y footer con un tinte suave, distinto del main blanco */
+  --chrome-bg: #edeefb;
+  --chrome-border: #d7d8f3;
+  --chrome-text: #51526b;
+
+  /* --- Estados (pills suaves, no saturados) --- */
+  --ok-bg: #ecfdf3;   --ok-fg: #067647;   --ok-bd: #abefc6;
+  --bad-bg: #fef3f2;  --bad-fg: #b42318;  --bad-bd: #fecdca;
+
+  /* --- Turnos --- */
+  --manana-bg: #fffaeb; --manana-fg: #b54708; --manana-bd: #fedf89;
+  --tarde-bg: #eff8ff;  --tarde-fg: #175cd3;  --tarde-bd: #b2ddff;
+  --noche-bg: #f4f3ff;  --noche-fg: #5925dc;  --noche-bd: #d9d6fe;
+
+  /* --- Forma --- */
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 8px 24px -6px rgba(16, 24, 40, 0.12);
+
+  /* --- Tipografía --- */
+  --font: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", "Cascadia Code", monospace;
+}
+
+/* ---------- Base ---------- */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    min-height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  letter-spacing: -0.011em;
 }
 
-.container-main {
-    grid-row: 2;
+/* el footer queda siempre abajo aunque haya poco contenido */
+.app-footer {
+  margin-top: auto;
 }
 
-/* ---------- Resaltar la página actual en el navbar ---------- */
-.navbar .nav-link {
-    border-radius: 8px;
-    padding: 0.4rem 0.9rem !important;
-    transition: background-color 0.2s ease, color 0.2s ease;
+/* Números, DNI, notas y fechas en monoespaciada → look de panel de datos */
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
 }
 
-/* Efecto al pasar el mouse por encima de los links */
-.navbar .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.12);
+/* ============================================================
+   Navbar (claro, con tabs)
+   ============================================================ */
+.app-navbar {
+  background: var(--chrome-bg);
+  border-bottom: 1px solid var(--chrome-border);
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
 }
 
-/* Link de la página en la que estoy parado: queda marcado y resaltado */
-.navbar .nav-link.active {
-    background-color: #ffffff;
-    color: #212529 !important;
-    font-weight: 600;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+.app-navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.app-navbar .navbar-brand .accent {
+  color: var(--brand);
+}
+
+.app-navbar .nav-link {
+  color: var(--chrome-text);
+  font-weight: 500;
+  font-size: 0.94rem;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.85rem !important;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-navbar .nav-link:hover {
+  color: var(--brand-strong);
+  background: rgba(79, 70, 229, 0.08);
+}
+
+.app-navbar .nav-link.active {
+  color: var(--brand-strong) !important;
+  background: #ffffff;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.app-navbar .navbar-toggler {
+  border-color: var(--chrome-border);
+}
+.app-navbar .navbar-toggler:focus {
+  box-shadow: 0 0 0 3px var(--ring);
+}
+.app-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%2318181b' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ============================================================
+   Encabezado de página (título + acción)
+   ============================================================ */
+.app-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.app-h1 {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+.app-sub {
+  margin: 0.3rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.94rem;
+}
+
+/* ============================================================
+   Botones (re-ajuste de variables de Bootstrap 5.3)
+   ============================================================ */
+.btn {
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  --bs-btn-focus-box-shadow: 0 0 0 3px var(--ring);
+}
+.btn-lg {
+  font-size: 0.95rem;
+  padding: 0.6rem 1.15rem;
+}
+
+/* Primaria (Nuevo / Guardar) → negro */
+.btn-success,
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--accent-hover);
+  --bs-btn-hover-border-color: var(--accent-hover);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--accent-hover);
+  --bs-btn-active-border-color: var(--accent-hover);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--accent);
+  --bs-btn-disabled-border-color: var(--accent);
+}
+
+/* Editar → neutra (gris claro con borde) */
+.btn-warning {
+  --bs-btn-color: var(--text);
+  --bs-btn-bg: var(--surface);
+  --bs-btn-border-color: var(--border-strong);
+  --bs-btn-hover-color: var(--text);
+  --bs-btn-hover-bg: var(--surface-2);
+  --bs-btn-hover-border-color: var(--border-strong);
+  --bs-btn-active-color: var(--text);
+  --bs-btn-active-bg: var(--surface-3);
+  --bs-btn-active-border-color: var(--border-strong);
+}
+
+/* Eliminar → rojo discreto (outline que se rellena al hover) */
+.btn-danger {
+  --bs-btn-color: var(--bad-fg);
+  --bs-btn-bg: var(--surface);
+  --bs-btn-border-color: var(--bad-bd);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--bad-fg);
+  --bs-btn-hover-border-color: var(--bad-fg);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--bad-fg);
+  --bs-btn-active-border-color: var(--bad-fg);
+}
+
+/* Cancelar → fantasma */
+.btn-secondary {
+  --bs-btn-color: var(--text-muted);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--border);
+  --bs-btn-hover-color: var(--text);
+  --bs-btn-hover-bg: var(--surface-2);
+  --bs-btn-hover-border-color: var(--border-strong);
+  --bs-btn-active-color: var(--text);
+  --bs-btn-active-bg: var(--surface-3);
+  --bs-btn-active-border-color: var(--border-strong);
+}
+
+/* ============================================================
+   Cards
+   ============================================================ */
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 1.1rem;
+}
+
+.card-title {
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.card-body {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.85;
+  padding: 1.1rem;
+}
+
+.card-body strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.card-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 0.85rem 1.1rem;
+}
+
+/* ============================================================
+   Pills de estado y de turno (reemplazan badges saturados)
+   ============================================================ */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-family: var(--font);
+  letter-spacing: 0;
+}
+.pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pill--ok      { background: var(--ok-bg);     color: var(--ok-fg);     border-color: var(--ok-bd); }
+.pill--bad     { background: var(--bad-bg);    color: var(--bad-fg);    border-color: var(--bad-bd); }
+.pill--neutral { background: var(--surface-2); color: var(--text-muted);border-color: var(--border-strong); }
+.pill--manana  { background: var(--manana-bg); color: var(--manana-fg); border-color: var(--manana-bd); }
+.pill--tarde   { background: var(--tarde-bg);  color: var(--tarde-fg);  border-color: var(--tarde-bd); }
+.pill--noche   { background: var(--noche-bg);  color: var(--noche-fg);  border-color: var(--noche-bd); }
+
+/* La nota se muestra como número mono dentro de la pill */
+.pill .nota {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   Estado vacío
+   ============================================================ */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-subtle);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 3rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+/* ============================================================
+   Formularios y modales
+   ============================================================ */
+.form-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: var(--radius-sm);
+  border-color: var(--border-strong);
+  color: var(--text);
+  font-size: 0.94rem;
+  padding: 0.55rem 0.75rem;
+}
+
+.form-control::placeholder {
+  color: var(--text-subtle);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--text);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.modal-content {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+.modal-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1.1rem 1.25rem;
+}
+
+.modal-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.modal-body {
+  padding: 1.25rem;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+}
+
+/* ============================================================
+   Footer (oscuro, premium — estilo SaaS)
+   ============================================================ */
+.app-footer {
+  background: #0f172a;
+  color: #94a3b8;
+  border-top: 1px solid rgba(129, 140, 248, 0.22);
+}
+
+.app-footer .container {
+  padding-top: 3.5rem;
+  padding-bottom: 2rem;
+}
+
+/* --- Grilla de 3 columnas --- */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1.4fr;
+  gap: 3.5rem;
+}
+
+@media (max-width: 991px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+}
+
+/* --- Columna 1: marca --- */
+.footer-brand-name {
+  margin: 0 0 0.85rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: #f8fafc;
+}
+
+.footer-brand-name .accent {
+  color: #818cf8;
+}
+
+.footer-desc {
+  margin: 0 0 1.4rem;
+  max-width: 32ch;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.footer-social {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.footer-social:hover {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.footer-social svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- Columnas de enlaces --- */
+.footer-col-title {
+  margin: 0 0 1.15rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #e2e8f0;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.footer-col a {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  width: fit-content;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.96rem;
+  line-height: 1.45;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.footer-col a:hover {
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+/* Iconos de contacto (índigo) */
+.footer-col svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #818cf8;
+}
+
+/* Items de contacto sin enlace (ubicación) */
+.footer-contact-static {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: #94a3b8;
+  font-size: 0.96rem;
+  line-height: 1.45;
+}
+
+/* En contacto los textos largos rompen línea y no se desplazan al hover */
+.footer-contact-list a {
+  overflow-wrap: anywhere;
+}
+
+.footer-contact-list a:hover {
+  transform: none;
+}
+
+/* --- Divisor --- */
+.footer-divider {
+  height: 1px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 2.75rem 0 1.6rem;
+  opacity: 1;
+}
+
+/* --- Barra inferior: copyright + versión + créditos --- */
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer-copy {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.footer-version {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(129, 140, 248, 0.15);
+  border: 1px solid rgba(129, 140, 248, 0.28);
+  color: #a5b4fc;
+  font-size: 0.74rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
+}
+
+.footer-credits {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.footer-credits strong {
+  font-weight: 500;
+  color: #cbd5e1;
 }

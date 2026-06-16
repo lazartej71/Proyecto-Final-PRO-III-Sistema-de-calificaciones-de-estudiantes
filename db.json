@@ -14,15 +14,15 @@
       "apellido": "Orellana",
       "dni": "40326789",
       "anio": 2,
-      "turno": "tarde"
+      "turno": "mañana"
     },
     {
-      "id": "3",
-      "nombre": "Laura",
-      "apellido": "Rodríguez",
-      "dni": "42345678",
+      "nombre": "Juan",
+      "apellido": "Diaz",
+      "dni": "12312312",
       "anio": 1,
-      "turno": "noche"
+      "turno": "tarde",
+      "id": "Lox5gM1IUq8"
     }
   ],
   "materias": [
@@ -43,12 +43,6 @@
       "nombre": "Base de Datos",
       "docente": "Prof. López",
       "notaMinima": 7
-    },
-    {
-      "nombre": "Programacion 3",
-      "docente": "Ismael Chavez",
-      "notaMinima": 6,
-      "id": "3SnlR_YQ7Dw"
     }
   ],
   "calificaciones": [
@@ -79,13 +73,6 @@
       "materiaId": 3,
       "nota": 7,
       "fecha": "2025-07-20"
-    },
-    {
-      "id": "5",
-      "estudianteId": 3,
-      "materiaId": 2,
-      "nota": 10,
-      "fecha": "2025-07-15"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

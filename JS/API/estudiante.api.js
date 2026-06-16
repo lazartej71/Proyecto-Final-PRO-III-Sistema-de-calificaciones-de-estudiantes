@@ -10,27 +10,36 @@ const cargarEstudiantes = async () => {
     }
 }; 
 
+const clasePillTurno = (turno) => {
+    const clases = {
+        'mañana': 'pill--manana',
+        'tarde': 'pill--tarde',
+        'noche': 'pill--noche'
+    };
+    return clases[turno] || 'pill--neutral';
+};
+
 const mostrarEstudiantes = (estudiantes) => {
     const lista = document.getElementById('listaEstudiantes');
     lista.innerHTML = '';
 
     if (estudiantes.length === 0) {
-        lista.innerHTML = '<p class="text-center text-muted mt-4">No hay estudiantes registrados</p>';
+        lista.innerHTML = '<div class="empty-state">Todavía no hay estudiantes registrados.</div>';
         return;
     }
 
     estudiantes.forEach((est) => {
         lista.innerHTML += `
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="card h-100">
-                    <div class="card-header bg-info text-white">
+                    <div class="card-header">
                         <h5 class="card-title mb-0">${est.nombre} ${est.apellido}</h5>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">
-                            <strong>DNI:</strong> ${est.dni}<br>
-                            <strong>Año:</strong> ${est.anio}º<br>
-                            <strong>Turno:</strong> <span class="badge bg-success">${est.turno}</span>
+                        <p class="card-text mb-0">
+                            <strong>DNI:</strong> <span class="mono">${est.dni}</span><br>
+                            <strong>Año:</strong> <span class="mono">${est.anio}º</span><br>
+                            <strong>Turno:</strong> <span class="pill ${clasePillTurno(est.turno)}">${est.turno}</span>
                         </p>
                     </div>
                     <div class="card-footer d-grid gap-2">
@@ -40,19 +49,29 @@ const mostrarEstudiantes = (estudiantes) => {
                             data-bs-toggle="modal"
                             data-bs-target="#modalEstudiante"
                         >
-                            ✏️ Editar
+                            Editar
                         </button>
                         <button
                             class="btn btn-danger btn-sm"
                             onclick="eliminarEstudiante('${est.id}')"
                         >
-                            🗑️ Eliminar
+                            Eliminar
                         </button>
                     </div>
                 </div>
             </div>
         `;
     });
+};
+
+// Devuelve true si ya existe otro estudiante con ese DNI.
+// idActual permite excluir al propio estudiante cuando se está editando.
+// Se filtra del lado del cliente para no depender del tipado del query de json-server.
+const dniDuplicado = async (dni, idActual = null) => {
+    const res = await axios.get(`${API_URL}/estudiantes`);
+    return res.data.some(
+        (est) => String(est.dni) === String(dni) && String(est.id) !== String(idActual)
+    );
 };
 
 const crearEstudiante = async () => {
@@ -67,7 +86,14 @@ const crearEstudiante = async () => {
         return;
     }
 
+    const btnGuardar = document.getElementById('btnGuardarEstudiante');
+    btnGuardar.disabled = true;
     try {
+        if (await dniDuplicado(dni)) {
+            alert('❌ Ya existe un estudiante con ese DNI');
+            return;
+        }
+
         await axios.post(`${API_URL}/estudiantes`, {
             nombre,
             apellido,
@@ -86,6 +112,8 @@ const crearEstudiante = async () => {
     } catch (error) {
         console.error('Error creando estudiante:', error);
         alert('❌ Error al crear estudiante: ' + error.message);
+    } finally {
+        btnGuardar.disabled = false;
     }
 };
 
@@ -102,7 +130,7 @@ const editarEstudiante = async (id) => {
 
         document.getElementById('idEstudianteEditar').value = id;
 
-        document.querySelector('#modalEstudiante .modal-title').textContent = '✏️ Editar Estudiante';
+        document.querySelector('#modalEstudiante .modal-title').textContent = 'Editar estudiante';
         document.getElementById('btnGuardarEstudiante').textContent = 'Actualizar';
     } catch (error) {
         console.error('Error cargando estudiante:', error);
@@ -131,7 +159,14 @@ const guardarCambiosEstudiante = async (e) => {
         return;
     }
 
+    const btnGuardar = document.getElementById('btnGuardarEstudiante');
+    btnGuardar.disabled = true;
     try {
+        if (await dniDuplicado(dni, idEstudianteEditar)) {
+            alert('❌ Ya existe otro estudiante con ese DNI');
+            return;
+        }
+
         await axios.patch(`${API_URL}/estudiantes/${idEstudianteEditar}`, {
             nombre,
             apellido,
@@ -150,6 +185,8 @@ const guardarCambiosEstudiante = async (e) => {
     } catch (error) {
         console.error('Error editando estudiante:', error);
         alert('❌ Error al actualizar estudiante: ' + error.message);
+    } finally {
+        btnGuardar.disabled = false;
     }
 };
 
@@ -179,8 +216,8 @@ const eliminarEstudiante = async (id) => {
 const limpiarFormulario = () => {
     document.getElementById('formularioEstudiante').reset();
     document.getElementById('idEstudianteEditar').value = '';
-    document.querySelector('#modalEstudiante .modal-title').textContent = '➕ Agregar Estudiante';
-    document.getElementById('btnGuardarEstudiante').textContent = 'Guardar Estudiante';
+    document.querySelector('#modalEstudiante .modal-title').textContent = 'Agregar estudiante';
+    document.getElementById('btnGuardarEstudiante').textContent = 'Guardar estudiante';
 };
 
 document.addEventListener('DOMContentLoaded', () => {

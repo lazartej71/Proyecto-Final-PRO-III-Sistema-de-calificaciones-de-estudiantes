@@ -15,21 +15,21 @@ const mostrarMaterias = (materias) => {
     lista.innerHTML = '';
 
     if (materias.length === 0) {
-        lista.innerHTML = '<p class="text-center text-muted mt-4">No hay materias registradas</p>';
+        lista.innerHTML = '<div class="empty-state">Todavía no hay materias registradas.</div>';
         return;
     }
 
     materias.forEach((mat) => {
         lista.innerHTML += `
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 col-lg-4">
             <div class="card h-100">
-                <div class="card-header bg-info text-white">
+                <div class="card-header">
                     <h5 class="card-title mb-0">${mat.nombre}</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">
+                    <p class="card-text mb-0">
                         <strong>Docente:</strong> ${mat.docente}<br>
-                        <strong>Aprobación:</strong> ${mat.notaMinima}<br>
+                        <strong>Nota mínima:</strong> <span class="mono">${mat.notaMinima}</span>
                     </p>
                 </div>
                 <div class="card-footer d-grid gap-2">
@@ -39,13 +39,13 @@ const mostrarMaterias = (materias) => {
                         data-bs-toggle="modal"
                         data-bs-target="#modalMaterias"
                     >
-                        ✏️ Editar
+                        Editar
                     </button>
                     <button
                         class="btn btn-danger btn-sm"
                         onclick="eliminarMateria('${mat.id}')"
                     >
-                        🗑️ Eliminar
+                        Eliminar
                     </button>
                 </div>
             </div>
@@ -57,8 +57,8 @@ const mostrarMaterias = (materias) => {
 const limpiarFormulario = () => {
     document.getElementById('formularioMateria').reset();
     document.getElementById('idMateriaEditar').value = '';
-    document.querySelector('#modalMaterias .modal-title').textContent = '➕ Agregar Materia';
-    document.getElementById('btnGuardarMateria').textContent = 'Guardar Materia';
+    document.querySelector('#modalMaterias .modal-title').textContent = 'Agregar materia';
+    document.getElementById('btnGuardarMateria').textContent = 'Guardar materia';
 };
 
 const crearMateria = async () => {
@@ -71,6 +71,13 @@ const crearMateria = async () => {
         return;
     }
 
+    if (Number(notaMinima) < 1 || Number(notaMinima) > 10) {
+        alert('❌ La nota mínima debe estar entre 1 y 10');
+        return;
+    }
+
+    const btnGuardar = document.getElementById('btnGuardarMateria');
+    btnGuardar.disabled = true;
     try {
         await axios.post(`${API_URL}/materias`, {
             nombre,
@@ -87,6 +94,8 @@ const crearMateria = async () => {
     } catch (error) {
         console.error('Error agregando una materia:', error);
         alert('❌ Error al agregar una materia: ' + error.message);
+    } finally {
+        btnGuardar.disabled = false;
     }
 };
 
@@ -101,7 +110,7 @@ const editarMateria = async (id) => {
 
         document.getElementById('idMateriaEditar').value = id;
 
-        document.querySelector('#modalMaterias .modal-title').textContent = '✏️ Editar Materia';
+        document.querySelector('#modalMaterias .modal-title').textContent = 'Editar materia';
         document.getElementById('btnGuardarMateria').textContent = 'Actualizar';
     } catch (error) {
         console.error('Error cargando materia:', error);
@@ -128,6 +137,13 @@ const guardarCambiosMateria = async (e) => {
         return;
     }
 
+    if (Number(notaMinima) < 1 || Number(notaMinima) > 10) {
+        alert('❌ La nota mínima debe estar entre 1 y 10');
+        return;
+    }
+
+    const btnGuardar = document.getElementById('btnGuardarMateria');
+    btnGuardar.disabled = true;
     try {
         await axios.patch(`${API_URL}/materias/${idMateriaEditar}`, {
             nombre,
@@ -144,15 +160,25 @@ const guardarCambiosMateria = async (e) => {
     } catch (error) {
         console.error('Error editando materia:', error);
         alert('❌ Error al actualizar la materia: ' + error.message);
+    } finally {
+        btnGuardar.disabled = false;
     }
 };
 
 const eliminarMateria = async (id) => {
-    if (!confirm('⚠️ ¿Estás seguro de que quieres eliminar esta materia?')) {
+    if (!confirm('⚠️ ¿Estás seguro de que quieres eliminar esta materia? Se eliminarán todas las calificaciones asociadas.')) {
         return;
     }
 
     try {
+        // Borrado en cascada: primero las calificaciones de esta materia,
+        // así no quedan calificaciones huérfanas apuntando a una materia inexistente.
+        const resCalificaciones = await axios.get(`${API_URL}/calificaciones?materiaId=${id}`);
+
+        for (const calificacion of resCalificaciones.data) {
+            await axios.delete(`${API_URL}/calificaciones/${calificacion.id}`);
+        }
+
         await axios.delete(`${API_URL}/materias/${id}`);
 
         cargarMaterias();
