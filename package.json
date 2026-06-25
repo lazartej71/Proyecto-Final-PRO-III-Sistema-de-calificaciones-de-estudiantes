@@ -1,0 +1,25 @@
+{
+  "name": "boletin-plus",
+  "version": "1.0.0",
+  "description": "Boletín+ — Sistema de Gestión Académica (estudiantes, materias y calificaciones). Proyecto Final de Programación III.",
+  "private": true,
+  "scripts": {
+    "api": "json-server db.json",
+    "front": "serve . -l 8080",
+    "start": "concurrently --names \"API,FRONT\" --prefix-colors \"blue,green\" \"npm:api\" \"npm:front\""
+  },
+  "keywords": [
+    "json-server",
+    "crud",
+    "bootstrap",
+    "axios",
+    "spa"
+  ],
+  "author": "Jorge Lazarte y Lautaro Orellana",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^10.0.3",
+    "json-server": "1.0.0-beta.15",
+    "serve": "^14.2.6"
+  }
+}
