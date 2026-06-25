@@ -135,6 +135,6 @@ http://localhost:8080
 ## 👥 Autores
 
 - **Jorge Lazarte** — [GitHub](https://github.com/lazartej71)
-- **Lautaro Orellana**[GitHub]()
+- **Lautaro Orellana**[GitHub](https://github.com/LautaroJoshua)
 
 San Miguel de Tucumán, Argentina.
